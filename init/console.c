@@ -112,7 +112,61 @@ void console_write_color(char *cstr, real_color_t back, real_color_t fore)
 	}
 }
 
-void console_write_hex(uint32_t n, real_color_t back, real_color_t fore);
+void console_write_hex(uint32_t n, real_color_t back, real_color_t fore)
+{
+	uint32_t n_copy = n;
+	char buf[8];
+	int i;
+    for (i=0; i<8; i++)
+	{
+		buf[i] = n_copy & 0x0F;
+		n_copy = n_copy >> 4;
+		
+		if (buf[i] < 0x0A)
+			buf[i] = buf[i] + 48;
+		else
+			buf[i] = buf[i] + 55;
+	}
+	
+	i = 7; 
 
-void console_write_dec(uint32_t n, real_color_t back, real_color_t fore);
+	while((buf[i] == '0') && (i > 0))
+	{
+		i--;
+	}
+	
+	for (;i>=0; i--)
+	{
+		console_putc_color(buf[i], back, fore);
+	}
+	
+	
+}
+
+void console_write_dec(uint32_t n, real_color_t back, real_color_t fore)
+{
+	uint32_t n_copy = n;
+	uint8_t buf[10];
+	int i;
+	for (i=0; i<10; i++)
+	{
+		buf[i] = n_copy % 10;
+		n_copy = n_copy / 10;
+		
+		buf[i] = buf[i] + 48;
+	}
+	
+	i = 9;
+	while((buf[i] == '0') && (i > 0))
+	{
+		i--;
+	}
+	
+	for (; i >= 0; i--)
+	{
+		console_putc_color(buf[i], back, fore);
+	}
+}
+
+
 
